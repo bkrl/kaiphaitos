@@ -12,7 +12,12 @@ pub struct Sbiret {
 pub fn console_putchar(ch: c_int) -> c_long {
     let ret;
     unsafe {
-        asm!("ecall", in("a7") EID_CONSOLE_PUTCHAR, in("a0") ch, lateout("a0") ret);
+        asm!(
+            "ecall",
+            in("a7") EID_CONSOLE_PUTCHAR, in("a0") ch,
+            lateout("a0") ret,
+            options(nomem, preserves_flags, nostack),
+        );
     }
     ret
 }
@@ -21,9 +26,11 @@ pub fn system_reset(reset_type: u32, reset_reason: u32) -> Sbiret {
     let error;
     let value;
     unsafe {
-        asm!("ecall",
-        in("a7") EID_SYSTEM_RESET, in("a6") 0, in("a0") reset_type, in("a1") reset_reason,
-        lateout("a0") error, lateout("a1") value
+        asm!(
+            "ecall",
+            in("a7") EID_SYSTEM_RESET, in("a6") 0, in("a0") reset_type, in("a1") reset_reason,
+            lateout("a0") error, lateout("a1") value,
+            options(nomem, preserves_flags, nostack),
         );
     }
     Sbiret { error, value }
