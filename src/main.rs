@@ -7,7 +7,7 @@ use core::arch::global_asm;
 use core::ffi::c_int;
 use core::panic::PanicInfo;
 
-global_asm!(include_str!("head.S"));
+global_asm!(include_str!("head.S"), options(raw));
 
 #[no_mangle]
 pub extern "C" fn main() -> ! {
