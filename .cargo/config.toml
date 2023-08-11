@@ -2,4 +2,4 @@
 target = "riscv64imac-unknown-none-elf"
 
 [target.riscv64imac-unknown-none-elf]
-runner = ["qemu-system-riscv64", "-nographic", "-machine", "virt", "-m", "1G", "-kernel"]
+runner = ["qemu-system-riscv64", "-nographic", "-machine", "virt", "-smp", "cpus=1,cores=1,threads=1", "-m", "1G", "-kernel"]
