@@ -7,8 +7,10 @@ SECTIONS {
 	. = 0x80200000;
 
 	. = ALIGN(PAGE_SIZE);
+	.head.text : {
+		*(.head.text)
+	}
 	.text : {
-		*(.text.entry)
 		*(.text .text.*)
 	}
 
