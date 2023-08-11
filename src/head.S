@@ -7,5 +7,5 @@ _start:
 	.option pop
 
 	li sp, 0x80400000
-	j main
+	tail main
 .popsection
