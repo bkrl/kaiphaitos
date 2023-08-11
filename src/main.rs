@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 
+mod paging;
 mod sbi;
 
 use core::arch::global_asm;
