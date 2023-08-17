@@ -1,11 +1,20 @@
+/* QEMU executes from the beginning so this doesn't actually matter. */
 ENTRY(_start)
 
 PAGE_SIZE = 4K;
 
 SECTIONS {
+  /*
+   * Physical address where the kernel is loaded.
+   * RAM starts at 0x80000000 and the firmware is loaded there.
+   */
 	. = 0x80200000;
 
 	. = ALIGN(PAGE_SIZE);
+  /*
+   * QEMU always starts executing from the beginning of the kernel,
+   * so this has to be the first section.
+   */
 	.head.text : {
 		*(.head.text)
 	}

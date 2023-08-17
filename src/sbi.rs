@@ -1,3 +1,5 @@
+//! Wrappers for SBI calls.
+
 use core::arch::asm;
 use core::ffi::{c_int, c_long};
 

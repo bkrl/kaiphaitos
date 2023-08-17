@@ -15,6 +15,7 @@ pub extern "C" fn main() -> ! {
     for c in "Hello, world!\n".as_bytes() {
         sbi::console_putchar(*c as c_int);
     }
+    // Shutdown the system.
     sbi::system_reset(0, 0);
     loop {}
 }

@@ -1,3 +1,6 @@
+//! Paging support.
+
+// Suppress dead code warnings during development.
 #![allow(dead_code)]
 
 use core::ops::{Index, IndexMut};
@@ -87,6 +90,7 @@ impl PageTableEntry {
         }
         Self(bits)
     }
+
     pub fn new_non_leaf(ppn: PhysicalPageNumber, global: bool) -> Self {
         let mut bits = u64::from(ppn) << Self::PPN_OFFSET
             | Self::VALID_BIT
