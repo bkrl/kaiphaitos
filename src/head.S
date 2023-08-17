@@ -15,11 +15,31 @@ _start:
 	# Initialize stack.
 	la sp, stack_end
 
+	call init_paging
+
+	# Reinitialize gp and sp now that pc is in the higher half.
+	.option push
+	.option norelax
+	la gp, __global_pointer$
+	.option pop
+
+	la sp, stack_end
+
+	# Call main.
+	tail main
+
+init_paging:
 	# Set up initial page table.
 	la a0, KERNEL_ROOT_PAGE_TABLE
-	# Identity map kernel.
+	# PTE pointing to the frame containing the kernel.
 	li t0, 0x200000CF
+	# Identity map the kernel.
 	sd t0, 16(a0)
+	# Map the kernel to the higher half address.
+	li t1, 4080
+	add t1, a0, t1
+	sd t0, 0(t1)
+
 	# Write PPN of page table and address translation mode to satp, enabling the MMU.
 	srli a0, a0, 12
 	li t0, 0x8000000000000000
@@ -27,8 +47,11 @@ _start:
 	csrw satp, t0
 	sfence.vma
 
-	# Call main.
-	tail main
+	# Adjust the return address to point to the higher half.
+	li t0, 0xffffffff00000000
+	add ra, ra, t0
+
+	ret
 
 .section .bss
 

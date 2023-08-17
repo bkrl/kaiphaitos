@@ -2,42 +2,44 @@
 ENTRY(_start)
 
 PAGE_SIZE = 4K;
+BASE_ADDRESS = 0xffffffff00000000;
+/*
+ * Physical address where the kernel is loaded.
+ * RAM starts at 0x80000000 and the firmware is loaded there.
+ */
+LOAD_ADDRESS = 0x80200000;
 
 SECTIONS {
-  /*
-   * Physical address where the kernel is loaded.
-   * RAM starts at 0x80000000 and the firmware is loaded there.
-   */
-	. = 0x80200000;
+  . = BASE_ADDRESS + LOAD_ADDRESS;
 
 	. = ALIGN(PAGE_SIZE);
   /*
    * QEMU always starts executing from the beginning of the kernel,
    * so this has to be the first section.
    */
-	.head.text : {
+	.head.text : AT(ADDR(.head.text) - BASE_ADDRESS){
 		*(.head.text)
 	}
-	.text : {
+	.text : AT(ADDR(.text) - BASE_ADDRESS) {
 		*(.text .text.*)
 	}
 
 	. = ALIGN(PAGE_SIZE);
-	.rodata : {
+	.rodata : AT(ADDR(.rodata) - BASE_ADDRESS) {
 		*(.rodata .rodata.*)
 	}
 
 	. = ALIGN(PAGE_SIZE);
-	.data : {
+	.data : AT(ADDR(.data) - BASE_ADDRESS) {
 		*(.data .data.*)
 	}
-  .sdata : {
+  .sdata : AT(ADDR(.sdata) - BASE_ADDRESS) {
     __global_pointer$ = . + 0x800;
     *(.sdata*)
   }
 
   . = ALIGN(PAGE_SIZE);
-	.bss : {
+	.bss : AT(ADDR(.bss) - BASE_ADDRESS) {
 		*(.bss .bss.*)
 	}
 
