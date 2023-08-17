@@ -7,7 +7,7 @@ _start:
 	la gp, __global_pointer$
 	.option pop
 
-	li sp, 0x80400000
+	la sp, stack_end
 
 	la a0, KERNEL_ROOT_PAGE_TABLE
 	li t0, 0x200000CF
@@ -25,5 +25,8 @@ _start:
 .balign 4096
 KERNEL_ROOT_PAGE_TABLE:
   .zero 4096
+
+.zero 1048576
+stack_end:
 
 .popsection
