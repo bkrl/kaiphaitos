@@ -39,6 +39,10 @@ SECTIONS {
   }
 
   . = ALIGN(PAGE_SIZE);
+  .sbss : AT(ADDR(.sbss) - BASE_ADDRESS) {
+    *(.sbss .sbss.*)
+  }
+  . = ALIGN(PAGE_SIZE);
 	.bss : AT(ADDR(.bss) - BASE_ADDRESS) {
 		*(.bss .bss.*)
 	}
