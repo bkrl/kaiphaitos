@@ -28,6 +28,10 @@ SECTIONS {
 	.rodata : AT(ADDR(.rodata) - BASE_ADDRESS) {
 		*(.rodata .rodata.*)
 	}
+  /* This might be useful for debugging? */
+  .eh_frame : AT(ADDR(.eh_frame) - BASE_ADDRESS) {
+    KEEP(*(.eh_frame .eh_frame.*))
+  }
 
 	. = ALIGN(PAGE_SIZE);
 	.data : AT(ADDR(.data) - BASE_ADDRESS) {
