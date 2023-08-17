@@ -13,9 +13,12 @@ global_asm!(include_str!("head.S"), options(raw));
 #[no_mangle]
 pub extern "C" fn main() -> ! {
     println!("Hello, world!");
-    // Shutdown the system.
+    shutdown();
+}
+
+fn shutdown() -> ! {
     sbi::system_reset(0, 0);
-    loop {}
+    panic!("shutdown failed");
 }
 
 #[panic_handler]
