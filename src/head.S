@@ -1,4 +1,5 @@
 .pushsection .head.text, "ax"
+
 .global _start
 _start:
 	.option push
@@ -20,7 +21,9 @@ _start:
 	tail main
 
 .section .bss
+
 .balign 4096
 KERNEL_ROOT_PAGE_TABLE:
   .zero 4096
+
 .popsection
