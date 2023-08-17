@@ -19,3 +19,22 @@ impl fmt::Write for DebugConsole {
 }
 
 pub static DEBUG_CONSOLE: Mutex<DebugConsole> = Mutex::new(DebugConsole {});
+
+// The following code is mostly copied from https://os.phil-opp.com/vga-text-mode/#a-println-macro.
+
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => ($crate::io::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _print(args: fmt::Arguments) {
+    use core::fmt::Write;
+    DEBUG_CONSOLE.lock().write_fmt(args).unwrap();
+}

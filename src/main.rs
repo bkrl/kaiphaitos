@@ -12,11 +12,7 @@ global_asm!(include_str!("head.S"), options(raw));
 
 #[no_mangle]
 pub extern "C" fn main() -> ! {
-    use core::fmt::Write;
-    io::DEBUG_CONSOLE
-        .lock()
-        .write_str("Hello, world!\n")
-        .unwrap();
+    println!("Hello, world!");
     // Shutdown the system.
     sbi::system_reset(0, 0);
     loop {}
