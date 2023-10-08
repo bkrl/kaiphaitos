@@ -17,7 +17,7 @@ _start:
 
 	call init_paging
 
-	# Reinitialize gp and sp now that pc is in the higher half.
+	# Reinitialize gp and sp now that we've relocated to the higher half.
 	.option push
 	.option norelax
 	la gp, __global_pointer$
@@ -29,20 +29,10 @@ _start:
 	tail main
 
 init_paging:
-	# Set up initial page table.
-	la a0, KERNEL_ROOT_PAGE_TABLE
-	# PTE pointing to the frame containing the kernel.
-	li t0, 0x200000CF
-	# Identity map the kernel.
-	sd t0, 16(a0)
-	# Map the kernel to the higher half address.
-	li t1, 4080
-	add t1, a0, t1
-	sd t0, 0(t1)
-
 	# Write PPN of page table and address translation mode to satp, enabling the MMU.
+	la a0, INIT_PAGE_TABLE
 	srli a0, a0, 12
-	li t0, 0x8000000000000000
+	li t0, 8 << 60  # Sv39 mode
 	or t0, a0, t0
 	csrw satp, t0
 	sfence.vma
@@ -53,15 +43,26 @@ init_paging:
 
 	ret
 
+.section .rodata
+
+# Initial page table used to relocate to the higher half.
+.balign 4096
+INIT_PAGE_TABLE:
+	# PTE pointing to the start of RAM where the kernel is.
+	#               phys addr            DAGUXWRV
+	.set INIT_PTE, (0x80000000 >> 2) | 0b11001111
+  .zero 8 * 2
+	# Identity map the kernel.
+	.8byte INIT_PTE
+	.zero 8 * 507
+	# Map the kernel to 0xffffffff80000000.
+	.8byte INIT_PTE
+	.zero 8
+
 .section .bss
 
-# Top level kernel page table.
-.balign 4096
-KERNEL_ROOT_PAGE_TABLE:
-  .zero 4096
-
 # 1 MiB stack.
-.zero 1048576
+.zero 1024 * 1024
 stack_end:
 
 .popsection
