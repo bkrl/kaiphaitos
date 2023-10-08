@@ -2,52 +2,55 @@
 ENTRY(_start)
 
 PAGE_SIZE = 4K;
-BASE_ADDRESS = 0xffffffff00000000;
+RAM_START = 0x80000000;
 /*
  * Physical address where the kernel is loaded.
- * RAM starts at 0x80000000 and the firmware is loaded there.
+ * This isn't at the beginning of RAM since the firmware uses that region.
  */
-LOAD_ADDRESS = 0x80200000;
+LOAD_ADDRESS = RAM_START + 0x200000;
+/* Difference between virtual and physical address of kernel. */
+KERNEL_OFFSET = 0xffffffff00000000;
+KERNEL_ADDRESS = LOAD_ADDRESS + KERNEL_OFFSET;
 
 SECTIONS {
-	. = BASE_ADDRESS + LOAD_ADDRESS;
+	. = KERNEL_ADDRESS;
 	
 	. = ALIGN(PAGE_SIZE);
 	/*
 	 * QEMU always starts executing from the beginning of the kernel,
 	 * so this has to be the first section.
 	 */
-	.head.text : AT(ADDR(.head.text) - BASE_ADDRESS){
+	.head.text : AT(ADDR(.head.text) - KERNEL_OFFSET){
 		*(.head.text)
 	}
-	.text : AT(ADDR(.text) - BASE_ADDRESS) {
+	.text : AT(ADDR(.text) - KERNEL_OFFSET) {
 		*(.text .text.*)
 	}
 	
 	. = ALIGN(PAGE_SIZE);
-	.rodata : AT(ADDR(.rodata) - BASE_ADDRESS) {
+	.rodata : AT(ADDR(.rodata) - KERNEL_OFFSET) {
 		*(.rodata .rodata.*)
 	}
 	/* This might be useful for debugging? */
-	.eh_frame : AT(ADDR(.eh_frame) - BASE_ADDRESS) {
+	.eh_frame : AT(ADDR(.eh_frame) - KERNEL_OFFSET) {
 		KEEP(*(.eh_frame .eh_frame.*))
 	}
 	
 	. = ALIGN(PAGE_SIZE);
-	.data : AT(ADDR(.data) - BASE_ADDRESS) {
+	.data : AT(ADDR(.data) - KERNEL_OFFSET) {
 		*(.data .data.*)
 	}
-	.sdata : AT(ADDR(.sdata) - BASE_ADDRESS) {
+	.sdata : AT(ADDR(.sdata) - KERNEL_OFFSET) {
 		__global_pointer$ = . + 0x800;
 		*(.sdata*)
 	}
 	
 	. = ALIGN(PAGE_SIZE);
-	.sbss : AT(ADDR(.sbss) - BASE_ADDRESS) {
+	.sbss : AT(ADDR(.sbss) - KERNEL_OFFSET) {
 	  *(.sbss .sbss.*)
 	}
 	. = ALIGN(PAGE_SIZE);
-	.bss : AT(ADDR(.bss) - BASE_ADDRESS) {
+	.bss : AT(ADDR(.bss) - KERNEL_OFFSET) {
 		*(.bss .bss.*)
 	}
 	
