@@ -2,7 +2,7 @@
 #![no_main]
 
 mod io;
-mod paging;
+mod memory;
 mod sbi;
 
 use core::arch::global_asm;
