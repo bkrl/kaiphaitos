@@ -6,7 +6,7 @@ use core::ops::Index;
 
 use bitfield::bitfield;
 
-use super::address::PAGE_SIZE;
+use super::PAGE_SIZE;
 
 const PAGE_TABLE_ENTRY_COUNT: usize = PAGE_SIZE / core::mem::size_of::<PageTableEntry>();
 

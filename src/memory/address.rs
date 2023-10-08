@@ -1,13 +1,6 @@
 //! Types for physical and virtual addresses.
 
-#![allow(dead_code)]
-
-pub const PAGE_OFFSET_BITS: i32 = 12;
-pub const PAGE_SIZE: usize = 1 << PAGE_OFFSET_BITS;
-pub const VIRTUAL_PAGE_NUMBER_BITS: i32 = 27;
-pub const VIRTUAL_ADDRESS_BITS: i32 = VIRTUAL_PAGE_NUMBER_BITS + PAGE_OFFSET_BITS;
-pub const PHYSICAL_PAGE_NUMBER_BITS: i32 = 44;
-pub const PHYSICAL_ADDRESS_BITS: i32 = PHYSICAL_PAGE_NUMBER_BITS + PAGE_OFFSET_BITS;
+use super::{PAGE_OFFSET_BITS, PHYSICAL_ADDRESS_BITS};
 
 #[derive(Debug)]
 pub struct InvalidAddressError;
