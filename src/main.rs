@@ -4,6 +4,7 @@
 mod io;
 mod memory;
 mod sbi;
+mod static_assert;
 
 use core::arch::global_asm;
 use core::panic::PanicInfo;

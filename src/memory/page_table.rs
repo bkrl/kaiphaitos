@@ -2,11 +2,13 @@
 
 #![allow(dead_code)]
 
+use core::mem::{align_of, size_of};
 use core::ops::Index;
 
 use bitfield::bitfield;
 
 use super::PAGE_SIZE;
+use crate::static_assert::static_assert;
 
 const PAGE_TABLE_ENTRY_COUNT: usize = PAGE_SIZE / core::mem::size_of::<PageTableEntry>();
 
@@ -57,6 +59,9 @@ impl PageTableEntry {
 
 #[repr(C, align(4096))]
 pub struct PageTable(pub [PageTableEntry; PAGE_TABLE_ENTRY_COUNT]);
+
+static_assert!(size_of::<PageTable>() == PAGE_SIZE);
+static_assert!(align_of::<PageTable>() == PAGE_SIZE);
 
 impl PageTable {
     pub const fn new() -> Self {
