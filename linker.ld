@@ -52,6 +52,9 @@ SECTIONS {
 	. = ALIGN(PAGE_SIZE);
 	.bss : AT(ADDR(.bss) - KERNEL_OFFSET) {
 		*(.bss .bss.*)
+		/* 1MiB stack. */
+		. += 1M;
+		stack_end = .;
 	}
 	
 	/* Copied from GNU ld default script. */

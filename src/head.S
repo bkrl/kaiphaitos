@@ -59,10 +59,4 @@ INIT_PAGE_TABLE:
 	.8byte INIT_PTE
 	.zero 8
 
-.section .bss
-
-# 1 MiB stack.
-.zero 1024 * 1024
-stack_end:
-
 .popsection
