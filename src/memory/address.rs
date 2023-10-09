@@ -50,3 +50,17 @@ impl TryFrom<PhysicalAddress> for PhysicalPageAddress {
         }
     }
 }
+
+impl TryFrom<u64> for PhysicalPageAddress {
+    type Error = InvalidAddressError;
+
+    fn try_from(val: u64) -> Result<Self, Self::Error> {
+        PhysicalAddress::try_from(val)?.try_into()
+    }
+}
+
+impl From<PhysicalPageAddress> for u64 {
+    fn from(value: PhysicalPageAddress) -> Self {
+        value.0.into()
+    }
+}
