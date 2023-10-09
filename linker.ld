@@ -56,6 +56,9 @@ SECTIONS {
 		. += 1M;
 		stack_end = .;
 	}
+
+	. = ALIGN(PAGE_SIZE);
+	FIRST_ALLOCATABLE_FRAME = .;
 	
 	/* Copied from GNU ld default script. */
 	/* Copyright (C) 2014-2023 Free Software Foundation, Inc.
