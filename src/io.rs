@@ -5,7 +5,7 @@ use spin::Mutex;
 
 use crate::sbi;
 
-pub struct DebugConsole {}
+pub struct DebugConsole;
 
 impl fmt::Write for DebugConsole {
     fn write_str(&mut self, s: &str) -> fmt::Result {
@@ -18,7 +18,7 @@ impl fmt::Write for DebugConsole {
     }
 }
 
-pub static DEBUG_CONSOLE: Mutex<DebugConsole> = Mutex::new(DebugConsole {});
+pub static DEBUG_CONSOLE: Mutex<DebugConsole> = Mutex::new(DebugConsole);
 
 // The following code is mostly copied from https://os.phil-opp.com/vga-text-mode/#a-println-macro.
 
