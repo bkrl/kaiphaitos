@@ -1,11 +1,13 @@
 //! Types for physical and virtual addresses.
 
+use core::fmt;
+
 use super::{PAGE_OFFSET_BITS, PHYSICAL_ADDRESS_BITS};
 
 #[derive(Debug)]
 pub struct InvalidAddressError;
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub struct PhysicalAddress(u64);
 
 impl TryFrom<u64> for PhysicalAddress {
@@ -26,6 +28,12 @@ impl From<PhysicalAddress> for u64 {
     }
 }
 
+impl fmt::Debug for PhysicalAddress {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:#x}", self.0)
+    }
+}
+
 impl PhysicalAddress {
     pub fn page_offset(self) -> u64 {
         self.0 & ((1 << PAGE_OFFSET_BITS) - 1)
@@ -36,7 +44,7 @@ impl PhysicalAddress {
 }
 
 /// A page-aligned physical address.
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub struct PhysicalPageAddress(PhysicalAddress);
 
 impl TryFrom<PhysicalAddress> for PhysicalPageAddress {
@@ -62,5 +70,11 @@ impl TryFrom<u64> for PhysicalPageAddress {
 impl From<PhysicalPageAddress> for u64 {
     fn from(value: PhysicalPageAddress) -> Self {
         value.0.into()
+    }
+}
+
+impl fmt::Debug for PhysicalPageAddress {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self.0)
     }
 }
