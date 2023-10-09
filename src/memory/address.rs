@@ -37,7 +37,7 @@ impl PhysicalAddress {
 
 /// A page-aligned physical address.
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-struct PhysicalPageAddress(PhysicalAddress);
+pub struct PhysicalPageAddress(PhysicalAddress);
 
 impl TryFrom<PhysicalAddress> for PhysicalPageAddress {
     type Error = InvalidAddressError;
