@@ -26,9 +26,9 @@ bitfield! {
     pub struct PageTableEntry(u64);
     impl Debug;
     pub valid, set_valid: 0;
-    // Permission bits are private since some combinations are reserved.
-    // The bitfield crate doesn't seem to support different visibility for getters and setters,
-    // so they are set to private here and public wrappers are defined for the getters.
+    // Permission bits are private since some combinations are reserved.  The bitfield crate
+    // doesn't seem to support different visibility for getters and setters, so they are set to
+    // private here and public wrappers are defined for the getters.
     readable_, set_readable: 1;
     writable_, set_writable: 2;
     executable_, set_executable: 3;
