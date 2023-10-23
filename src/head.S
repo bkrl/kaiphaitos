@@ -6,29 +6,10 @@
 # Entry point.
 .global _start
 _start:
-	# Initialize gp.
+	# Disable gp relaxation since gp isn't initialized yet.
 	.option push
 	.option norelax
-	la gp, __global_pointer$
-	.option pop
 
-	# Initialize stack.
-	la sp, stack_end
-
-	call init_paging
-
-	# Reinitialize gp and sp now that we've relocated to the higher half.
-	.option push
-	.option norelax
-	la gp, __global_pointer$
-	.option pop
-
-	la sp, stack_end
-
-	# Call main.
-	tail main
-
-init_paging:
 	# Write PPN of page table and address translation mode to satp, enabling the MMU.
 	la a0, INIT_PAGE_TABLE
 	srli a0, a0, 12
@@ -37,11 +18,20 @@ init_paging:
 	csrw satp, t0
 	sfence.vma
 
-	# Adjust the return address to point to the higher half.
-	li t0, 0xffffffff00000000
-	add ra, ra, t0
+	# Absolute jump to the higher half.
+	lga ra, 1f
+	jr ra
+1:
 
-	ret
+	# Initialize gp.
+	la gp, __global_pointer$
+	.option pop
+
+	# Initialize stack pointer.
+	la sp, stack_end
+
+	# Call main.
+	tail main
 
 .section .rodata
 

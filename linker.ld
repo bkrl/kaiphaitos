@@ -44,6 +44,8 @@ SECTIONS {
 		__global_pointer$ = . + 0x800;
 		*(.sdata*)
 	}
+
+	.got : { *(.got*) }
 	
 	. = ALIGN(PAGE_SIZE);
 	.sbss : AT(ADDR(.sbss) - KERNEL_OFFSET) {
