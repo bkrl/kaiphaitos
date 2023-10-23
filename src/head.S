@@ -15,6 +15,7 @@ _start:
 	srli a0, a0, 12
 	li t0, 8 << 60  # Sv39 mode
 	or t0, a0, t0
+	sfence.vma
 	csrw satp, t0
 	sfence.vma
 
