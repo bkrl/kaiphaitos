@@ -76,7 +76,7 @@ pub fn frame_alloc_with_ptr<T>() -> (PhysicalPageAddress, *mut T) {
 
 /// Free a frame. Freeing a frame that wasn't allocated will cause bad things, so this is unsafe.
 pub unsafe fn frame_free(frame: PhysicalPageAddress) {
-    FRAME_ALLOCATOR.lock().free(physical_to_virtual(frame))
+    unsafe { FRAME_ALLOCATOR.lock().free(physical_to_virtual(frame)) }
 }
 
 fn virtual_to_physical<T>(frame: *mut T) -> PhysicalPageAddress {
