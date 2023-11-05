@@ -38,24 +38,22 @@ unsafe impl Send for FrameAllocator {}
 
 impl FrameAllocator {
     fn alloc(&mut self) -> *mut FreeFrame {
-        unsafe {
-            if self.free_list_head.is_null() {
-                let frame = self.next_uninitialized_frame;
-                self.next_uninitialized_frame = self.next_uninitialized_frame.offset(1);
-                frame
-            } else {
-                let frame = self.free_list_head;
-                self.free_list_head = (*self.free_list_head).next;
-                frame
-            }
+        if self.free_list_head.is_null() {
+            let frame = self.next_uninitialized_frame;
+            self.next_uninitialized_frame = unsafe { self.next_uninitialized_frame.offset(1) };
+            frame
+        } else {
+            let frame = self.free_list_head;
+            self.free_list_head = unsafe { (*self.free_list_head).next };
+            frame
         }
     }
 
     unsafe fn free(&mut self, frame: *mut FreeFrame) {
         unsafe {
             (*frame).next = self.free_list_head;
-            self.free_list_head = frame;
         }
+        self.free_list_head = frame;
     }
 }
 
